@@ -1,4 +1,4 @@
-from components.utils.voice.azurevoices import Styles, Voices, reserved_voices
+from components.utils.voice.azurevoices import Styles, Voices
 
 def selectVoice(character_name: str):
   voice_list = [e.value for e in Voices]
@@ -6,6 +6,10 @@ def selectVoice(character_name: str):
   if voice_list[voice_index] in reserved_voices:
     return selectVoice(f'{character_name}x')
   return voice_list[voice_index]
+
+
+gm_voice=Voices.SARA.value
+reserved_voices=[gm_voice]
 
 def mapCharacterToVoice(character: str):
   """Switch function to get the correct voice"""

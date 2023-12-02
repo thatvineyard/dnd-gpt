@@ -1,7 +1,8 @@
 import json
 from components.assistance import Assistance
 from components.utils.cli.cli_print import cli_print_debug, cli_print_error, cli_print_info
-from components.utils.voice.charactervoices import mapCharacterToVoice, mapEmotionToStyle, selectVoice
+from components.utils.voice.azurevoices import Voices
+from components.utils.voice.charactervoices import mapCharacterToVoice, mapEmotionToStyle, selectVoice, gm_voice
 from components.utils.voice.texttospeech import TextToSpeech
 from components.utils.voice.ttsscript import TtsScript
 
@@ -39,9 +40,11 @@ def parse(text: str, textToSpeech: TextToSpeech = None) -> Assistance:
   try:
     lines = json.loads(text)
   except json.JSONDecodeError as error:
+    cli_print_debug("Error decoding JSON")
     raise InputTextFormatError(error)
 
   script = TtsScript()
+  skillChecks = []
 
   # If we only got one line for some reason, put it in a list
   if isinstance(lines, dict):
@@ -58,12 +61,12 @@ def parse(text: str, textToSpeech: TextToSpeech = None) -> Assistance:
     style = mapEmotionToStyle(emotion)
     print_prefix = f'{character}: '
     
-    # gm_voice = mapCharacterToVoice('gm')
-    gm_voice = None
     gm_prefix = ""
 
+    rate=1
+
     if character == "gm":
-      script.addLine(text, voice=gm_voice, style=style, styleDegree=2, rate=1.5, print_prefix=gm_prefix)
+      script.addLine(text, voice=gm_voice, style=style, styleDegree=2, rate=rate, print_prefix=gm_prefix)
     else:
       parts = text.split("\"")
       for i, part in enumerate(parts):
@@ -72,20 +75,32 @@ def parse(text: str, textToSpeech: TextToSpeech = None) -> Assistance:
           if part == "":
             continue
           cli_print_debug(voice)
-          script.addLine(part, voice=gm_voice, style=style, styleDegree=2, rate=1.5, print_prefix=gm_prefix)
+          script.addLine(part, voice=gm_voice, style=style, styleDegree=2, rate=rate, print_prefix=gm_prefix)
         else:
           if part == "":
             continue
-          script.addLine(part, voice=voice, style=style, styleDegree=2, rate=1.5, print_prefix=print_prefix)
+          script.addLine(part, voice=voice, style=style, styleDegree=2, rate=rate, print_prefix=print_prefix)
 
+    try: 
+      skillCheckDc = int(line.get('skillCheck', -1))
+    except:
+      skillCheckDc = -1
+
+    skillCheckPrompt = line.get('skillCheckPrompt', '')
+
+
+    if skillCheckDc >= 0:
+      skillChecks.append(f'{skillCheckPrompt} ({skillCheckDc})')
 
   # Set up the actions in the assistance.
   assistance.addAction(lambda : cli_print_info(script.toString()), "🖨️ Printing script")
   # if(textToSpeech):
   assistance.addAction(lambda: textToSpeech.speakScript(script), "🗣️ Speaking script")
+  assistance.addAction(lambda : print("\n".join(skillChecks)), "🖨️ Printing script")
 
   return assistance
 
 
 class InputTextFormatError(Exception):
   "Raised format of input text cannot be handled by the parser"
+

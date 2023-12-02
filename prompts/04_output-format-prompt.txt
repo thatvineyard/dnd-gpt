@@ -24,7 +24,7 @@ Player: "Listen in on the people in front of you talking"
 ```
 [
     {
-        "text": "As you stand nearby, you catch snippets of conversation from the huddled group of villagers. They speak in hushed tones and cast wary glances around. ,
+        "text": "As you stand nearby, you catch snippets of conversation from the huddled group of villagers. They speak in hushed tones and cast wary glances around.",
         "character": "gm",
     },
     {
@@ -52,6 +52,35 @@ You:
     {
         "text": "The briefcase's locks click open and you can feel the leather creak as you slowly lift the lid. You can tell it hasn't been opened in a long time. The first thing you notice is the smell of tobacco and mildew. Then you see it. The arc-pistol. You didn't believe them, but now your whole world crumbles as everything you knew about science had been proven wrong.",
         "character": "gm"
+    }
+]
+```
+
+When you as the game master are setting up a skill check, you must add the key "skillCheck" with a number between 0 and 20 to one of the lines, as well as "skillCheckPrompt" to summarize what the skill check entails. 
+You should add skill checks to both scenes of action and conversation. 
+
+For example:
+Player: "Attempt to pay the merchant with counterfeit money"
+You: 
+```
+[
+    {
+        "text": "You lift up the crossbow you want to buy to show the merchant, while complimenting its design and ask if he made it himself.",
+        "character": "gm",
+    },
+    {
+        "\"Haha, no. I just trade the stuff\" he chuckles, \"But I do agree it's fine craftmanship\"",
+        "character": "Merchant",
+    },
+    {
+        "You take out some coins and stack them in a way where the top coins are real but the rest are fake and hand them over to the merchant in an attempt to trick him",
+        "character": "gm",
+        "skillCheck": 12,
+        "skillCheckPrompt": "Pay with counterfeit coins"
+    },
+    {
+        "The merchant reaches for the coins",
+        "character": "gm",
     }
 ]
 ```

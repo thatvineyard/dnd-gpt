@@ -13,9 +13,6 @@ class Voices(Enum):
   JANE = "en-US-JaneNeural"
   JENNY = "en-US-JennyNeural"
 
-gm_voice=[Voices.SARA]
-reserved_voices=[gm_voice]
-
 class Styles(Enum): 
   angry = "angry"                     # Expresses an angry and annoyed tone.
   chat = "chat"                       # Expresses a casual and relaxed tone.

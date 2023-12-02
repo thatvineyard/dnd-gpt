@@ -36,7 +36,7 @@ arg_parser.add_argument("-f", "--history_file", help=f'If a history file exists,
 args = arg_parser.parse_args()
 
 # Set up logging
-cli_setup_logging(level=logging.DEBUG)
+cli_setup_logging(level=logging.INFO)
 
 # Set up utilities
 # STEP 1: 
@@ -72,5 +72,5 @@ while True:
       assistance.execute()
     except InputTextFormatError:
       cli_print_warn("Error parsing answer, asking OpenAI for a better format.")
-      answer: str = chatSession.chat("Can you please repeat the previous answer in the correct JSON format?")
+      answer: str = chatSession.chat(f'{question} - And remember to format the response properly')
 

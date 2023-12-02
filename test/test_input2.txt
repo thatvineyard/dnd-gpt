@@ -1,19 +1,22 @@
-
-sadda
+```
 [
     {
-        "text": "As you stand nearby, you catch snippets of conversation from the huddled group of villagers. They speak in hushed tones and cast wary glances around.",
+        "text": "You lift up the crossbow you want to buy to show the merchant, while complimenting its design and ask if he made it himself.",
         "character": "gm"
     },
     {
-        "text": "\"We need to do something about Jorm,\" one of them whispers, shaking their head. \"Four innocent kids hardly more than babes. It's a travesty.\"",
-        "character": "Sofia"
+        "text": "\"Haha, no. I just trade the stuff\" he chuckles, \"But I do agree it's fine craftmanship\"",
+        "character": "Merchant"
     },
     {
-        "text": "\"Yes, but what can we do?\" the rugged man replies, \"He has an army backing him. We have cattle.\"",
-        "character": "Harold"
+        "text": "You take out some coins and stack them in a way where the top coins are real but the rest are fake and hand them over to the merchant in an attempt to trick him",
+        "character": "gm",
+        "skillCheck": 12,
+        "skillCheckPrompt": "Pay with counterfeit coins"
     },
     {
-        "text": "The actions this morning have split the villagers into two camps: those who want to fight and those who want to live.",
+        "text": "The merchant reaches for the coins",
         "character": "gm"
     }
+]
+```
