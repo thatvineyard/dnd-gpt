@@ -2,7 +2,7 @@ import json
 from components.assistance import Assistance
 from components.utils.cli.cli_print import cli_print_debug, cli_print_error, cli_print_info
 from components.utils.voice.azurevoices import Voices
-from components.utils.voice.charactervoices import mapCharacterToVoice, mapEmotionToStyle, selectVoice, gm_voice
+from components.utils.voice.charactervoices import mapCharacterToVoice, mapEmotionToStyle, selectVoice, gm_voice, gm_style
 from components.utils.voice.texttospeech import TextToSpeech
 from components.utils.voice.ttsscript import TtsScript
 
@@ -66,7 +66,7 @@ def parse(text: str, textToSpeech: TextToSpeech = None) -> Assistance:
     rate=1
 
     if character == "gm":
-      script.addLine(text, voice=gm_voice, style=style, styleDegree=2, rate=rate, print_prefix=gm_prefix)
+      script.addLine(text, voice=gm_voice, style=gm_style, styleDegree=2, rate=rate, print_prefix=gm_prefix)
     else:
       parts = text.split("\"")
       for i, part in enumerate(parts):
@@ -75,7 +75,7 @@ def parse(text: str, textToSpeech: TextToSpeech = None) -> Assistance:
           if part == "":
             continue
           cli_print_debug(voice)
-          script.addLine(part, voice=gm_voice, style=style, styleDegree=2, rate=rate, print_prefix=gm_prefix)
+          script.addLine(part, voice=gm_voice, style=gm_style, styleDegree=2, rate=rate, print_prefix=gm_prefix)
         else:
           if part == "":
             continue

@@ -9,6 +9,7 @@ def selectVoice(character_name: str):
 
 
 gm_voice=Voices.SARA.value
+gm_style=""
 reserved_voices=[gm_voice]
 
 def mapCharacterToVoice(character: str):

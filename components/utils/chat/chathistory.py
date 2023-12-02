@@ -58,6 +58,10 @@ class ChatHistory:
         self.history.append(chatRound)
         self.storeHistory()
 
+    def removeLastMessageFromHistory(self):
+        self.history.pop()
+        self.storeHistory()
+
     def storeHistory(self):
         """Stores the history to disk. Use ChatHistory.fromFile() to read it back into memory."""
         

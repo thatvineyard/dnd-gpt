@@ -1,11 +1,13 @@
 import os
 from pathlib import Path
+from typing import Self
 import openai
 from datetime import datetime
 
 from components.utils.chat.chathistory import ChatHistory
 from components.utils.chat.openai import OpenAiClient
 from components.utils.chat.promptbuilder import build_prompt
+from components.utils.cli.cli_print import cli_print_debug
 
 # STEP 1
 
@@ -13,7 +15,11 @@ class ChatSession:
   """A class used to chat with openAI and to keep track of the history."""
   
   def __init__(self, api_key: str, prompt_directory: str, history_directory: str, history_file_path: str | None = None):
-    self.openai_client = OpenAiClient(api_key)
+    kind_of_crazy=1.3
+    creative=1
+    boring=0.3
+    
+    self.openai_client = OpenAiClient(api_key, temp=creative)
     
     self.prompt_directory = prompt_directory
 
@@ -29,7 +35,12 @@ class ChatSession:
 
       self.history.saveChatRound(message, response)
       
+      cli_print_debug(response)
+
       return response
+  
+  def removeLastMessageFromHistory(self):
+    self.history.removeLastMessageFromHistory()
 
   def __getOrCreateChatHistory(self, history_directory: str, history_file_path: str | None = None):
       if history_file_path is not None:

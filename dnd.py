@@ -57,8 +57,6 @@ while True:
   # STEP 1: ask openAI for an answer
   answer: str = chatSession.chat(question)
 
-  cli_print_debug(answer)
-
   # STEP 3: Extract parsing to it's own function
   assistance = None
   attempts = 0
@@ -71,6 +69,7 @@ while True:
       assistance = parse(answer, textToSpeech)
       assistance.execute()
     except InputTextFormatError:
+      chatSession.removeLastMessageFromHistory()
       cli_print_warn("Error parsing answer, asking OpenAI for a better format.")
       answer: str = chatSession.chat(f'{question} - And remember to format the response properly')
 
