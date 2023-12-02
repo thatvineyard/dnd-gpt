@@ -1,0 +1,19 @@
+
+sadda
+[
+    {
+        "text": "As you stand nearby, you catch snippets of conversation from the huddled group of villagers. They speak in hushed tones and cast wary glances around.",
+        "character": "gm"
+    },
+    {
+        "text": "\"We need to do something about Jorm,\" one of them whispers, shaking their head. \"Four innocent kids hardly more than babes. It's a travesty.\"",
+        "character": "Sofia"
+    },
+    {
+        "text": "\"Yes, but what can we do?\" the rugged man replies, \"He has an army backing him. We have cattle.\"",
+        "character": "Harold"
+    },
+    {
+        "text": "The actions this morning have split the villagers into two camps: those who want to fight and those who want to live.",
+        "character": "gm"
+    }
