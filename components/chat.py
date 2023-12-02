@@ -18,8 +18,8 @@ class ChatSession:
     kind_of_crazy=1.3
     creative=1
     boring=0.3
-    
-    self.openai_client = OpenAiClient(api_key, temp=creative)
+
+    self.openai_client = OpenAiClient(api_key, temp_range_min=creative, temp_range_max=kind_of_crazy)
     
     self.prompt_directory = prompt_directory
 
@@ -31,10 +31,14 @@ class ChatSession:
       # Put together system prompt
       system_prompt = build_prompt(self.prompt_directory, self.history)
 
+      cli_print_debug(system_prompt)
+      cli_print_debug(message)
+      
       response = self.openai_client.generateChatCompletion(system_prompt=system_prompt, prompt=message)
 
       self.history.saveChatRound(message, response)
-      
+      self.openai_client.randomizeTemperature()
+
       cli_print_debug(response)
 
       return response

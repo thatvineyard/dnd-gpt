@@ -36,7 +36,7 @@ arg_parser.add_argument("-f", "--history_file", help=f'If a history file exists,
 args = arg_parser.parse_args()
 
 # Set up logging
-cli_setup_logging(level=logging.INFO)
+cli_setup_logging(level=logging.DEBUG)
 
 # Set up utilities
 # STEP 1: 

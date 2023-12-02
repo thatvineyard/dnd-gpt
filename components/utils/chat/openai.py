@@ -1,4 +1,8 @@
+import math
+import random
 from openai import OpenAI
+
+from components.utils.cli.cli_print import cli_print_debug
 
 # STEP 1
 
@@ -7,15 +11,21 @@ class OpenAiClient:
   
   model = 'gpt-3.5-turbo-1106'
   
-  def __init__(self, api_key: str, temp: int = 1):
+  def __init__(self, api_key: str, temp_range_min: int = 0.8, temp_range_max = 1):
+
+    self.temp_range_min = max(0, temp_range_min)
+    self.temp_range_max = min(1.5, temp_range_max) 
+
     self.client = OpenAI(
       api_key=api_key
     )
-    self.temp = temp
+    self.temp = self.randomizeTemperature()
 
   def generateChatCompletion(self, system_prompt: str, prompt: str):
     """Generate a chat completion from a system prompt and prompt"""
     
+    cli_print_debug(self.temp)
+
     response = self.client.chat.completions.create(
         model=self.model,
         messages=[
@@ -26,3 +36,6 @@ class OpenAiClient:
     )
 
     return response.choices[0].message.content.strip()
+  
+  def randomizeTemperature(self): 
+    return random.random() * (self.temp_range_max - self.temp_range_min) + self.temp_range_min
