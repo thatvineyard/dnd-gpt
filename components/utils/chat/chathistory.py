@@ -22,6 +22,13 @@ class ChatRound:
 {ai_prefix}{self.response}
         """
 
+    @staticmethod
+    def fromDict(dict: dict):
+        return ChatRound(
+            dict["question"],
+            dict["response"],
+        )
+
 
 class ChatHistory:
     """
@@ -30,32 +37,14 @@ class ChatHistory:
 
     def __init__(
         self,
-        history_directory: str,
-        file_name: str,
         user_prefix: str = "I said: ",
         ai_prefix: str = "You said: ",
+        history: list[ChatRound] = [],
     ):
-        self.history: list[ChatRound] = []
-        self.history_file_path = f"{history_directory}/{file_name}"
-        os.makedirs(os.path.dirname(self.history_file_path), exist_ok=True)
+        self.history = history
 
         self.user_prefix = user_prefix
         self.ai_prefix = ai_prefix
-
-    @staticmethod
-    def fromFile(history_directory: str, history_file_name: str):
-        """Creates a ChatHistory from the given history_file_name. You should provide the file name of a file within the history directory"""
-
-        history = ChatHistory(history_directory, history_file_name)
-        history_file = open(history.history_file_path, "r")
-        json_string = history_file.read()
-        history_file.close()
-
-        json_list = json.loads(json_string)
-        for element in json_list:
-            history.history.append(ChatRound(**element))
-
-        return history
 
     def saveChatRound(self, question: str, answer: str):
         """Save a single round of chat. Use to build the history."""
@@ -63,21 +52,10 @@ class ChatHistory:
         answer = self.removeWhitespace(answer)
         chatRound = ChatRound(question, answer)
         self.history.append(chatRound)
-        self.storeHistory()
 
     def removeLastMessageFromHistory(self):
         self.history.pop()
         self.storeHistory()
-
-    def storeHistory(self):
-        """Stores the history to disk. Use ChatHistory.fromFile() to read it back into memory."""
-
-        json_string = json.dumps(
-            self.history, default=lambda o: o.__dict__, sort_keys=True, indent=4
-        )
-        history_file = open(self.history_file_path, "w")
-        history_file.write(json_string)
-        history_file.close()
 
     def toHistoryPrompt(self):
         """Format in natural-language-way that OpenAI will understand."""
@@ -94,3 +72,11 @@ class ChatHistory:
 
     def removeWhitespace(self, text):
         return re.sub(r"\s+", " ", text)
+
+    @staticmethod
+    def fromDict(dict: dict):
+        return ChatHistory(
+            dict["user_prefix"],
+            dict["ai_prefix"],
+            list(map(lambda e: ChatRound.fromDict(e), dict["history"])),
+        )

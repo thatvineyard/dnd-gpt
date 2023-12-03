@@ -1,10 +1,13 @@
 from components.chat import ChatSession
 from components.parser import InputTextFormatError, parse
 from components.utils.cli.cliprint import cli_input, cli_print_error, cli_print_warn
+from components.utils.state.sessionhandler import SessionHandler
 from components.utils.voice.texttospeech import TextToSpeech
 
 
-def start_cli(chatSession: ChatSession, textToSpeech: TextToSpeech):
+def start_cli(
+    sessionHandler: SessionHandler, chatSession: ChatSession, textToSpeech: TextToSpeech
+):
     while True:
         # STEP 1: Receives a text from console input.
         question: str = cli_input("INPUT: ")
@@ -33,3 +36,5 @@ def start_cli(chatSession: ChatSession, textToSpeech: TextToSpeech):
                 answer: str = chatSession.chat(
                     f"{question} - And remember to format the response properly"
                 )
+
+        sessionHandler.saveSession()

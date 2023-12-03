@@ -1,30 +1,26 @@
 import logging
-import os
 from components.chat import ChatSession
 from components.utils.cli.args import Args
+from components.utils.cli.cliprint import cli_setup_logging
 from components.utils.cli.envvars import EnvVars
+import json_fix
 
-from components.utils.state.statehandler import SessionHandler
+from components.utils.state.sessionhandler import SessionHandler
+
+cli_setup_logging(level=(logging.DEBUG if Args.debug else logging.INFO))
+
+sessionHandler = SessionHandler(EnvVars.SESSION_DIRECTORY)
+sessionHandler.__newSession("funtime")
+sessionHandler.saveSession()
 
 
-stateHandler = SessionHandler("./session")
-stateHandler.newSession("funtime")
-stateHandler.selectSession("funtime")
+sessionHandler2 = SessionHandler(EnvVars.SESSION_DIRECTORY)
+sessionHandler2.__loadSession("funtime")
 
 chatSession = ChatSession(
+    sessionHandler.getCurrentSession(),
     EnvVars.OPENAI_KEY,
-    EnvVars.PROMPTS_DIRECTORY,
-    EnvVars.HISTORY_DIRECTORY,
-    Args.session_file,
 )
-
-
-# load_dotenv(".env")
-# AZURE_KEY_1=os.environ["AZURE_KEY_1"]
-# AZURE_SERVICE_REGION=os.environ["AZURE_SERVICE_REGION"]
-# textToSpeech = TextToSpeech(AZURE_KEY_1, AZURE_SERVICE_REGION)
-
-# text = open('test/test_input2.txt', 'r').read()
 
 # cli_setup_logging(logging.DEBUG)
 

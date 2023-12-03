@@ -2,6 +2,7 @@
 import argparse
 
 import inquirer
+import os
 from components.utils.cli.cliprint import cli_print_debug
 from components.utils.cli.envvars import EnvVars
 
@@ -32,7 +33,7 @@ class Args:
     arg_parser.add_argument(
         "-f",
         "--session_file",
-        help=f"If a history file exists, it will be loaded to continue conversation, otherwise it will be the filename given to the new history file. NOTE: Needs to be in the history_directory ({EnvVars.HISTORY_DIRECTORY})",
+        help=f"If a history file exists, it will be loaded to continue conversation, otherwise it will be the filename given to the new history file. NOTE: Needs to be in the history_directory ({EnvVars.SESSION_DIRECTORY})",
         required=False,
     )
     args = arg_parser.parse_args()
@@ -48,20 +49,27 @@ class Args:
     else:
         mode = args.mode
 
+    session_files = os.listdir(EnvVars.SESSION_DIRECTORY)
+
     if not args.session_file:
+
         if not args.new:
-            new = inquirer.list_input(
+            session = inquirer.list_input(
                 message="Start a new adventure or load a previous file?",
                 choices=["new", "load"],
             )
         else:
-            new = args.new
-        if new and new == "load":
+            session = "new"
+        if session == "new":
+            session_file = inquirer.text(
+                message="Name of adventure",
+                validate=lambda _, text: f"{text}.json"
+                not in os.listdir(EnvVars.SESSION_DIRECTORY),
+            )
+        if session == "load":
             session_file = inquirer.list_input(
                 message="Select file to load",
-                choices=["1", "2"],
+                choices=session_files,
             )
-        else:
-            session_file = None
     else:
         session_file = args.session_file

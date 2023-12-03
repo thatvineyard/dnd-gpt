@@ -3,4 +3,5 @@
 __pycache__
 .venv
 history/
+sessions/
 node_modules/
