@@ -4,7 +4,7 @@ from multiprocessing import Process
 from spotipy import Spotify
 from spotipy.oauth2 import SpotifyOAuth
 
-from components.utils.cli.cli_print import cli_print_error
+from components.utils.cli.cliprint import cli_print_error
 
 # STEP 4
 

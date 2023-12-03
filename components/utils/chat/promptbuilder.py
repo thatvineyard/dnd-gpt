@@ -3,7 +3,7 @@ from genericpath import isdir, isfile
 import os
 
 from components.utils.chat.chathistory import ChatHistory
-from components.utils.cli.cli_print import cli_print_debug
+from components.utils.cli.cliprint import cli_print_debug
 
 
 def build_prompt(promt_folder: str, chat_history: ChatHistory = None):

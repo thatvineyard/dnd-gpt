@@ -1,6 +1,6 @@
 # STEP 3
 
-from components.utils.cli.cli_print import cli_print_debug
+from components.utils.cli.cliprint import cli_print_debug
 
 
 class SsmlFormatter:

@@ -1,7 +1,7 @@
 from typing import Callable
 from colorama import Fore, Style
 
-from components.utils.cli.cli_print import cli_print_info
+from components.utils.cli.cliprint import cli_print_info
 
 class Assistance:
   """

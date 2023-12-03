@@ -1,6 +1,6 @@
 import json
 from components.assistance import Assistance
-from components.utils.cli.cli_print import cli_print_debug, cli_print_error, cli_print_info
+from components.utils.cli.cliprint import cli_print_debug, cli_print_error, cli_print_info
 from components.utils.voice.azurevoices import Voices
 from components.utils.voice.charactervoices import mapCharacterToVoice, mapEmotionToStyle, selectVoice, gm_voice, gm_style
 from components.utils.voice.texttospeech import TextToSpeech

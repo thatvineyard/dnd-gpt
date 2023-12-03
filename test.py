@@ -4,7 +4,7 @@ import os
 
 from dotenv import load_dotenv
 from components.parser import InputTextFormatError, parse
-from components.utils.cli.cli_print import cli_print_debug, cli_setup_logging
+from components.utils.cli.cliprint import cli_print_debug, cli_setup_logging
 
 from components.utils.voice.texttospeech import TextToSpeech
 

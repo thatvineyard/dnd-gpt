@@ -1,5 +1,5 @@
 import azure.cognitiveservices.speech as speechsdk
-from components.utils.cli.cli_print import cli_print_debug, cli_print_error
+from components.utils.cli.cliprint import cli_print_debug, cli_print_error
 
 from components.utils.voice.ttsscript import TtsScript
 
