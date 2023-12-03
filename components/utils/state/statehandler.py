@@ -1,4 +1,3 @@
-
 from genericpath import isfile
 import json
 import os
@@ -12,11 +11,8 @@ class Session:
         self.history = []
 
     def toJson(self):
-        return json.dumps({
-            "name": self.name,
-            "history": self.history
-        })
-    
+        return json.dumps({"name": self.name, "history": self.history})
+
     @staticmethod
     def fromJson(json_string: str):
         json_object = json.loads(json_string)
@@ -25,7 +21,6 @@ class Session:
 
 
 class SessionHandler:
-
     def __init__(self, session_directory: str):
         self.session_directory = session_directory
         self.sessions: dict[str, Session] = {}
@@ -34,11 +29,11 @@ class SessionHandler:
     def selectSession(self, name: str):
         if name not in self.sessions.keys():
             self.loadSession(name)
-        
+
         self.selected_session = self.sessions.get(name)
         if not self.selected_session:
             raise KeyError(f'Session "{name}" could not be found.')
-            
+
     def loadSession(self, file_name: str):
         self.session_file_path = f"{self.session_directory}/{file_name}"
         if not os.path.isfile(self.session_file_path):
@@ -67,7 +62,7 @@ class SessionHandler:
     @staticmethod
     def fromFile(history_directory: str, history_file_name: str):
         """Creates a ChatHistory from the given history_file_name. You should provide the file name of a file within the history directory"""
-      
+
         history = ChatHistory(history_directory, history_file_name)
         history_file = open(history.history_file_path, "r")
         json_string = history_file.read()
@@ -81,7 +76,7 @@ class SessionHandler:
 
     def storeHistory(self):
         """Stores the history to disk. Use ChatHistory.fromFile() to read it back into memory."""
-        
+
         json_string = json.dumps(
             self.history, default=lambda o: o.__dict__, sort_keys=True, indent=4
         )

@@ -1,4 +1,3 @@
-
 import logging
 import os
 from components.chat import ChatSession
@@ -12,7 +11,12 @@ stateHandler = SessionHandler("./session")
 stateHandler.newSession("funtime")
 stateHandler.selectSession("funtime")
 
-chatSession = ChatSession(EnvVars.OPENAI_KEY, EnvVars.PROMPTS_DIRECTORY, EnvVars.HISTORY_DIRECTORY, Args.session_file)
+chatSession = ChatSession(
+    EnvVars.OPENAI_KEY,
+    EnvVars.PROMPTS_DIRECTORY,
+    EnvVars.HISTORY_DIRECTORY,
+    Args.session_file,
+)
 
 
 # load_dotenv(".env")

@@ -19,17 +19,21 @@ setup_signals()
 cli_setup_logging(level=(logging.DEBUG if Args.debug else logging.INFO))
 
 
-cli_print_debug(f'mode: {Args.mode}')
+cli_print_debug(f"mode: {Args.mode}")
 
-chatSession = ChatSession(EnvVars.OPENAI_KEY, EnvVars.PROMPTS_DIRECTORY, EnvVars.HISTORY_DIRECTORY, Args.session_file)
+chatSession = ChatSession(
+    EnvVars.OPENAI_KEY,
+    EnvVars.PROMPTS_DIRECTORY,
+    EnvVars.HISTORY_DIRECTORY,
+    Args.session_file,
+)
 textToSpeech = TextToSpeech(EnvVars.AZURE_KEY_1, EnvVars.AZURE_SERVICE_REGION)
 # spotipy = SpotipyClient(client_id=SPOTIFY_CLIENT_ID, client_secret=SPOTIFY_CLIENT_SECRET)
 
 match Args.mode:
-  case "cli":
-    start_cli(chatSession, textToSpeech)
-  case "api":
-    pass
-  case _:
-    start_cli(chatSession, textToSpeech)
-
+    case "cli":
+        start_cli(chatSession, textToSpeech)
+    case "api":
+        pass
+    case _:
+        start_cli(chatSession, textToSpeech)

@@ -5,8 +5,11 @@ from components.utils.voice.ttsscript import TtsScript
 
 # STEP 2
 
+
 class TextToSpeech:
-    def __init__(self, speech_key, service_region, defaultVoice: str = "en-US-AriaNeural"):
+    def __init__(
+        self, speech_key, service_region, defaultVoice: str = "en-US-AriaNeural"
+    ):
         self.speech_key = speech_key
         self.service_region = service_region
 
@@ -26,14 +29,14 @@ class TextToSpeech:
 
     def speakText(self, text: str):
         """Basic tts without directives, uses default voice."""
-        
+
         result = self.speech_synthesizer.speak_text_async(text).get()
-         
-        TextToSpeech.__checkResult(result);
+
+        TextToSpeech.__checkResult(result)
 
     def speakScript(self, script: TtsScript):
         """Collection of advanced tts using SSML syntax."""
-        
+
         ssmlText = script.toSSML()
         cli_print_debug(ssmlText)
 
@@ -43,11 +46,13 @@ class TextToSpeech:
 
     def __checkResult(result):
         """Checks result of TTS generation and gives helpful error messages if something failed"""
-        
+
         cli_print_debug(result)
         if result.reason == speechsdk.ResultReason.Canceled:
             cancellation_details = result.cancellation_details
-            cli_print_error("Speech synthesis canceled: {}".format(cancellation_details.reason))
+            cli_print_error(
+                "Speech synthesis canceled: {}".format(cancellation_details.reason)
+            )
             if cancellation_details.reason == speechsdk.CancellationReason.Error:
                 if cancellation_details.error_details:
                     cli_print_error(
