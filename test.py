@@ -1,6 +1,9 @@
 
 import logging
 import os
+from components.chat import ChatSession
+from components.utils.cli.args import Args
+from components.utils.cli.envvars import EnvVars
 
 from components.utils.state.statehandler import SessionHandler
 
@@ -8,6 +11,9 @@ from components.utils.state.statehandler import SessionHandler
 stateHandler = SessionHandler("./session")
 stateHandler.newSession("funtime")
 stateHandler.selectSession("funtime")
+
+chatSession = ChatSession(EnvVars.OPENAI_KEY, EnvVars.PROMPTS_DIRECTORY, EnvVars.HISTORY_DIRECTORY, Args.session_file)
+
 
 # load_dotenv(".env")
 # AZURE_KEY_1=os.environ["AZURE_KEY_1"]
