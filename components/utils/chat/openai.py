@@ -22,8 +22,6 @@ class OpenAiClient:
     def generateChatCompletion(self, system_prompt: str, prompt: str):
         """Generate a chat completion from a system prompt and prompt"""
 
-        cli_print_debug(self.temp)
-
         response = self.client.chat.completions.create(
             model=self.model,
             messages=[

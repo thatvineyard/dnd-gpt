@@ -1,9 +1,9 @@
 import json
 import os
-from components.utils.chat.chathistory import ChatHistory, ChatRound
-from components.utils.cli.cliprint import cli_print_debug
-from components.utils.settings.settings import EngineSettings
-from components.utils.state.session import Session
+from components.utils.cli.cliprint import CliPrefix, cli_print_debug, cli_print_info
+from components.utils.engine.enginestateerror import EngineStateError
+from components.utils.engine.settings.settings import EngineSettings
+from components.utils.engine.state.session import Session
 
 
 class SessionHandler:
@@ -19,42 +19,57 @@ class SessionHandler:
             os.mkdir(session_directory)
 
     def __selectSession(self, session: Session):
-        cli_print_debug(f"Selected session {session.toJson()}")
+        cli_print_debug(
+            prefix=CliPrefix.SESSION, message=f"Selecting session: {session.toJson()}"
+        )
         self.selected_session = session
+        cli_print_info(
+            prefix=CliPrefix.SESSION, message=f"Selected session '{session.name}'"
+        )
 
     def prepareSession(self, name: str):
         try:
             session = self.__loadSession(name)
         except KeyError:
+            cli_print_debug(
+                prefix=CliPrefix.SESSION,
+                message=f"Session '{name}' could not be found.",
+            )
             session = self.__newSession(name)
 
         return session
 
     def __loadSession(self, name: str):
-        cli_print_debug(f"Loading session {name}")
+        cli_print_debug(prefix=CliPrefix.SESSION, message=f"Loading session {name}")
         try:
             loaded_session = Session.fromFile(
                 self.session_directory, self.__sessionFileName(name)
             )
         except Exception:
-            raise KeyError(f'Session "{name}" could not be found.')
+            raise KeyError(f"Session '{name}' could not be found.")
 
         self.__selectSession(loaded_session)
 
     def __newSession(self, name: str):
-        cli_print_debug(f"Creating a new session {name}")
+        cli_print_debug(
+            prefix=CliPrefix.SESSION, message=f"Creating a new session {name}"
+        )
         new_session = Session(name)
         self.__selectSession(new_session)
 
     def getCurrentSession(self):
         if not self.selected_session:
-            raise KeyError("No session selected.")
+            raise EngineStateError("No session selected.")
 
         return self.selected_session
 
     def saveSession(self):
         self.getCurrentSession().toFile(
             self.session_directory, self.__sessionFileName(self.selected_session.name)
+        )
+        cli_print_debug(
+            prefix=CliPrefix.SESSION,
+            message=f"Saved session '{self.selected_session.name}'",
         )
 
     @staticmethod

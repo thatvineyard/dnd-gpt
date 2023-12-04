@@ -1,0 +1,2 @@
+class EngineStateError(RuntimeError):
+    pass

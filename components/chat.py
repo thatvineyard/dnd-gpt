@@ -1,16 +1,8 @@
-import os
-from pathlib import Path
-from typing import Self
-import openai
-from datetime import datetime
-
-from components.utils.chat.chathistory import ChatHistory
 from components.utils.chat.openai import OpenAiClient
 from components.utils.chat.promptbuilder import build_prompt
-from components.utils.cli.cliprint import cli_print_debug
-from components.utils.settings.settings import SessionSettings
-from components.utils.state.session import Session
-from components.utils.state.sessionhandler import SessionHandler
+from components.utils.cli.cliprint import CliPrefix, cli_print_debug
+from components.utils.engine.enginestateerror import EngineStateError
+from components.utils.engine.state.session import Session
 
 # STEP 1
 
@@ -18,46 +10,44 @@ from components.utils.state.sessionhandler import SessionHandler
 class ChatSession:
     """A class used to chat with openAI and to keep track of the history."""
 
-    def __init__(
-        self,
-        sessionHandler: SessionHandler,
-        api_key: str,
-        # prompt_directory: str,
-        # history_directory: str,
-        # history_file_path: str | None = None,
-    ):
-        self.sessionHandler = sessionHandler
+    def __init__(self, api_key: str, prompt_directory: str):
+        self.api_key = api_key
+        self.prompt_directory = prompt_directory
+        self.session = None
 
-        print(self.sessionHandler.getCurrentSession().sessionSettings)
-
+    def new_session(self, session: Session):
+        self.session = session
         self.openai_client = OpenAiClient(
-            api_key,
-            temp_range_min=self.sessionHandler.getCurrentSession().sessionSettings.temperature_range_min,
-            temp_range_max=self.sessionHandler.getCurrentSession().sessionSettings.temperature_range_max,
+            self.api_key,
+            temp_range_min=self.session.sessionSettings.temperature_range_min,
+            temp_range_max=self.session.sessionSettings.temperature_range_max,
         )
 
     def chat(self, message):
         """Build a prompt, send to openAI and then save the history"""
 
+        if not self.session:
+            raise EngineStateError("No session selected")
+
         # Put together system prompt
         system_prompt = build_prompt(
-            self.sessionHandler.engineSettings.prompt_directory,
-            self.sessionHandler.getCurrentSession().history,
+            self.prompt_directory,
+            self.session.history,
         )
 
-        cli_print_debug(system_prompt)
-        cli_print_debug(message)
+        cli_print_debug(prefix=CliPrefix.CHAT, message=system_prompt)
+        cli_print_debug(prefix=CliPrefix.CHAT, message=message)
 
         response = self.openai_client.generateChatCompletion(
             system_prompt=system_prompt, prompt=message
         )
 
-        self.sessionHandler.getCurrentSession().history.saveChatRound(message, response)
+        self.session.history.saveChatRound(message, response)
         self.openai_client.randomizeTemperature()
 
-        cli_print_debug(response)
+        cli_print_debug(prefix=CliPrefix.CHAT, message=response)
 
         return response
 
     def removeLastMessageFromHistory(self):
-        self.sessionHandler.getCurrentSession().history.removeLastMessageFromHistory()
+        self.session.history.removeLastMessageFromHistory()

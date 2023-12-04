@@ -1,5 +1,6 @@
 from enum import Enum
 import logging
+from textwrap import indent
 
 from colorama import Fore, Style
 
@@ -11,6 +12,13 @@ class CliStyle(Enum):
     YELLOW = Fore.YELLOW
     DEFAULT = Fore.RESET
     LOW_CONTRAST = Style.DIM
+
+
+class CliPrefix:
+    ENGINE = "🚀  ENGINE: "
+    CHAT = "🤖    CHAT: "
+    PARSER = "🔍  PARSER: "
+    SESSION = "📜 SESSION: "
 
 
 _level = logging.INFO
@@ -33,9 +41,14 @@ def cli_print_info(
         )
 
 
-def cli_print_debug(message: str):
+def cli_print_debug(message: str, prefix: str = ""):
     if _level <= logging.DEBUG:
-        print(_wrap_in_style(message, CliStyle.LOW_CONTRAST))
+        if prefix != "" and "\n" in message:
+            message = indent(message, "    ")
+            message = f"\n{message}"
+        print(
+            f"{_wrap_in_style(prefix, CliStyle.LOW_CONTRAST)}{_wrap_in_style(message, CliStyle.LOW_CONTRAST)}"
+        )
 
 
 def cli_print_warn(message: str):

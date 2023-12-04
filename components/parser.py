@@ -1,6 +1,7 @@
 import json
 from components.assistance import Assistance
 from components.utils.cli.cliprint import (
+    CliPrefix,
     cli_print_debug,
     cli_print_error,
     cli_print_info,
@@ -34,7 +35,9 @@ def parse(text: str, textToSpeech: TextToSpeech = None) -> Assistance:
             raise ValueError
         text = text[character_index:]
     except ValueError:
-        cli_print_debug("Could not find '[' or '{' in string")
+        cli_print_debug(
+            prefix=CliPrefix.PARSER, message="Could not find '[' or '{' in string"
+        )
         pass
 
     try:
@@ -45,13 +48,15 @@ def parse(text: str, textToSpeech: TextToSpeech = None) -> Assistance:
             raise ValueError
         text = text[: character_index + 1]
     except ValueError:
-        cli_print_debug("Could not find '[' or '{' in string")
+        cli_print_debug(
+            prefix=CliPrefix.PARSER, message="Could not find '[' or '{' in string"
+        )
         pass
 
     try:
         lines = json.loads(text)
     except json.JSONDecodeError as error:
-        cli_print_debug("Error decoding JSON")
+        cli_print_debug(prefix=CliPrefix.PARSER, message="Error decoding JSON")
         raise InputTextFormatError(error)
 
     script = TtsScript()
@@ -91,7 +96,7 @@ def parse(text: str, textToSpeech: TextToSpeech = None) -> Assistance:
                 if i % 2 == 0:
                     if part == "":
                         continue
-                    cli_print_debug(voice)
+                    cli_print_debug(prefix=CliPrefix.PARSER, message=voice)
                     script.addLine(
                         part,
                         voice=gm_voice,
