@@ -1,20 +1,45 @@
+from typing import Callable
 from components.chat import ChatSession
 from components.parser import InputTextFormatError, parse
+from components.utils.chat.promptfactory import PromptFactory
 from components.utils.cli.cliprint import cli_input, cli_print_error, cli_print_warn
 from components.utils.voice.texttospeech import TextToSpeech
 
 
 class GameMaster:
-    def __init__(self, chatSession: ChatSession, textToSpeech: TextToSpeech):
+    def __init__(
+        self,
+        chatSession: ChatSession,
+        textToSpeech: TextToSpeech,
+        create_prompt_factory: Callable[[], PromptFactory],
+    ):
         self.chatSession = chatSession
         self.textToSpeech = textToSpeech
+        self.create_prompt_factory = create_prompt_factory
 
     def takeTurn(self):
-        # STEP 1: Receives a text from console input.
-        question: str = cli_input("INPUT: ")
+        player_input: str = cli_input("INPUT: ")
 
-        # STEP 1: ask openAI for an answer
-        answer: str = self.chatSession.chat(question)
+        story_system_prompt = (
+            self.create_prompt_factory()
+            .withAllPromptFiles()
+            .withHistory()
+            .withHistoryLimit(2000)
+            .build()
+        )
+        story_response: str = self.chatSession.chat(
+            prompt=player_input, system_prompt=story_system_prompt
+        )
+
+        format_system_prompt = (
+            self.create_prompt_factory()
+            .withFormatPrompts()
+            .withFinalInstruction("Reformat this answer in proper JSON format.")
+            .build()
+        )
+        formatted_response: str = self.chatSession.chat(
+            prompt=story_response, system_prompt=format_system_prompt
+        )
 
         # STEP 3: Extract parsing to it's own function
         assistance = None
@@ -27,13 +52,19 @@ class GameMaster:
                 )
                 break
             try:
-                assistance = parse(answer, self.textToSpeech)
+                assistance = parse(formatted_response, self.textToSpeech)
                 assistance.execute()
             except InputTextFormatError:
                 self.chatSession.removeLastMessageFromHistory()
                 cli_print_warn(
                     "Error parsing answer, asking OpenAI for a better format."
                 )
-                answer: str = self.chatSession.chat(
-                    f"{question} - And remember to format the response properly"
+                format_system_prompt = (
+                    self.create_prompt_factory()
+                    .withFormatPrompts()
+                    .withFinalInstruction("Reformat this answer in proper JSON format.")
+                    .build()
+                )
+                formatted_response: str = self.chatSession.chat(
+                    prompt=story_response, system_prompt=format_system_prompt
                 )

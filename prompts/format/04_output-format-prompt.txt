@@ -1,10 +1,10 @@
-You must format your responses in the JSON format in order to separate the different voices that will be used. 
+You must format your responses in the JSON format in order to separate the different voices that will be used.
 Each line spoken by a different character should be included in a list of line objects.
 Each line object must include the following keys: "text", "character". When speaking as the game master you will use the character "gm".
 When speaking as another character, you must write which character is speaking.
 You should also add which emotion the character is speaking in. The available emotions are: Normal, Sad, Angry, Happy, Terrified, Shouting, Whispering, Excited.
 
-For example: 
+For example:
 Player: "I talk to the mysterious man"
 You:
 ```
@@ -46,9 +46,9 @@ Player: "Listen in on the people in front of you talking"
 ]
 ```
 
-When no characters are speaking, the response should still be in JSON format, but the list of lines should only include a single element. 
+When no characters are speaking, the response should still be in JSON format, but the list of lines should only include a single element.
 
-For example: 
+For example:
 Player: "I look in the briefcase"
 You:
 ```
@@ -60,12 +60,12 @@ You:
 ]
 ```
 
-When you as the game master are setting up a skill check, you must add the key "skillCheck" with a number between 0 and 20 to one of the lines, as well as "skillCheckPrompt" to summarize what the skill check entails. 
-You should add skill checks to both scenes of action and conversation. 
+When you as the game master are setting up a skill check, you must add the key "skillCheck" with a number between 0 and 20 to one of the lines, as well as "skillCheckPrompt" to summarize what the skill check entails.
+You should add skill checks to both scenes of action and conversation.
 
 For example:
 Player: "Attempt to pay the merchant with counterfeit money"
-You: 
+You:
 ```
 [
     {

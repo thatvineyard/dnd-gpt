@@ -1,5 +1,4 @@
 from components.utils.chat.openai import OpenAiClient
-from components.utils.chat.promptbuilder import build_prompt
 from components.utils.cli.cliprint import CliPrefix, cli_print_debug
 from components.utils.engine.enginestateerror import EngineStateError
 from components.utils.engine.state.session import Session
@@ -29,25 +28,19 @@ class ChatSession:
 
         return self.session
 
-    def chat(self, message):
+    def chat(self, prompt="", system_prompt: str = ""):
         """Build a prompt, send to openAI and then save the history"""
-
-        # Put together system prompt
-        system_prompt = build_prompt(
-            self.prompt_directory,
-            self.requireSession().history,
-        )
 
         cli_print_debug(
             prefix=CliPrefix.CHAT, message=f"System prompt: \n{system_prompt}"
         )
-        cli_print_debug(prefix=CliPrefix.CHAT, message=f"Prompt '{message}'")
+        cli_print_debug(prefix=CliPrefix.CHAT, message=f"Prompt '{prompt}'")
 
         response = self.openai_client.generateChatCompletion(
-            system_prompt=system_prompt, prompt=message
+            system_prompt=system_prompt, prompt=prompt
         )
 
-        self.requireSession().history.saveChatRound(message, response)
+        self.requireSession().history.saveChatRound(prompt, response)
         self.openai_client.randomizeTemperature()
 
         cli_print_debug(prefix=CliPrefix.CHAT, message=f"Response: \n{response}")

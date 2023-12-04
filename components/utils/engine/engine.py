@@ -1,6 +1,7 @@
 import json
 from components.chat import ChatSession
 from components.cli import start_cli
+from components.utils.chat.promptfactory import PromptFactory
 from components.utils.cli.cliprint import CliPrefix, cli_print_debug, cli_print_info
 from components.utils.engine.settings.settings import EngineSettings
 from components.utils.engine.state.sessionhandler import SessionHandler
@@ -21,7 +22,6 @@ class Engine:
             self.engineSettings.openai_key,
             self.engineSettings.prompt_directory,
         )
-
         # spotipy = SpotipyClient(client_id=SPOTIFY_CLIENT_ID, client_secret=SPOTIFY_CLIENT_SECRET)
 
     def start(self):
@@ -42,4 +42,15 @@ class Engine:
             self.engineSettings.azure_key_1, self.engineSettings.azure_service_region
         )
 
-        start_cli(self.sessionHandler, self.chatSession, textToSpeech)
+        start_cli(
+            sessionHandler=self.sessionHandler,
+            create_prompt_factory=self.__create_prompt_factory,
+            chatSession=self.chatSession,
+            textToSpeech=textToSpeech,
+        )
+
+    def __create_prompt_factory(self):
+        return PromptFactory(
+            self.engineSettings.prompt_directory,
+            self.sessionHandler.requireSelectedSession(),
+        )

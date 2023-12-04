@@ -54,7 +54,7 @@ class ChatHistory:
     def removeLastMessageFromHistory(self):
         self.history.pop()
 
-    def toHistoryPrompt(self):
+    def toHistoryPrompt(self, character_limit: int | None = None):
         """Format in natural-language-way that OpenAI will understand."""
 
         history_prompt = "Chat history:\n"
@@ -63,8 +63,15 @@ class ChatHistory:
             history_prompt += "This is the first message."
             return history_prompt
 
-        for round in self.history:
-            history_prompt += round.toPrompt(self.user_prefix, self.ai_prefix)
+        for round in self.history[::-1]:  # go through list in reverse
+            round_prompt = round.toPrompt(self.user_prefix, self.ai_prefix)
+            if (
+                character_limit
+                and (len(history_prompt) + len(round_prompt)) >= character_limit
+            ):
+                break
+            history_prompt += round_prompt
+
         return history_prompt
 
     def removeWhitespace(self, text):
