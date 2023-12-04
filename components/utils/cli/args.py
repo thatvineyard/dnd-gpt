@@ -49,7 +49,7 @@ class Args:
     else:
         mode = args.mode
 
-    session_files = os.listdir(EnvVars.SESSION_DIRECTORY)
+    session_files = os.listdir(EnvVars.SESSION_DIRECTORY) if os.path.isdir(EnvVars.SESSION_DIRECTORY) else []
 
     if not args.session_file:
 
