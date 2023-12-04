@@ -30,7 +30,7 @@ class SessionHandler:
     def prepareSession(self, name: str):
         try:
             session = self.__loadSession(name)
-        except KeyError:
+        except FileNotFoundError:
             cli_print_debug(
                 prefix=CliPrefix.SESSION,
                 message=f"Session '{name}' could not be found.",
@@ -45,8 +45,8 @@ class SessionHandler:
             loaded_session = Session.fromFile(
                 self.session_directory, self.__sessionFileName(name)
             )
-        except Exception:
-            raise KeyError(f"Session '{name}' could not be found.")
+        except FileNotFoundError:
+            raise FileNotFoundError(f"Session '{name}' could not be found.")
 
         self.__selectSession(loaded_session)
 

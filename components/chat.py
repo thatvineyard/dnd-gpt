@@ -35,8 +35,10 @@ class ChatSession:
             self.session.history,
         )
 
-        cli_print_debug(prefix=CliPrefix.CHAT, message=system_prompt)
-        cli_print_debug(prefix=CliPrefix.CHAT, message=message)
+        cli_print_debug(
+            prefix=CliPrefix.CHAT, message=f"System prompt: \n{system_prompt}"
+        )
+        cli_print_debug(prefix=CliPrefix.CHAT, message=f"Prompt '{message}'")
 
         response = self.openai_client.generateChatCompletion(
             system_prompt=system_prompt, prompt=message
@@ -45,7 +47,7 @@ class ChatSession:
         self.session.history.saveChatRound(message, response)
         self.openai_client.randomizeTemperature()
 
-        cli_print_debug(prefix=CliPrefix.CHAT, message=response)
+        cli_print_debug(prefix=CliPrefix.CHAT, message=f"Response: \n{response}")
 
         return response
 

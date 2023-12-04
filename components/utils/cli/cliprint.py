@@ -19,6 +19,7 @@ class CliPrefix:
     CHAT = "🤖    CHAT: "
     PARSER = "🔍  PARSER: "
     SESSION = "📜 SESSION: "
+    VOICE = "🗣️   VOICE: "
 
 
 _level = logging.INFO

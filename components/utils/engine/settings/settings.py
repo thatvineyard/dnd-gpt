@@ -13,29 +13,20 @@ class EngineSettings:
         self.mode = Args.mode
 
 
-class SessionTempDefaults(Enum):
+class SessionTempDefaults:
     kind_of_crazy = 1.3
     creative = 1
     boring = 0.3
 
 
-class SessionSettings(dict):
+class SessionSettings:
     def __init__(
         self,
-        temperature_range_min: int = SessionTempDefaults.creative.value,
-        temperature_range_max: int = SessionTempDefaults.kind_of_crazy.value,
+        temperature_range_min: int = SessionTempDefaults.creative,
+        temperature_range_max: int = SessionTempDefaults.kind_of_crazy,
     ):
         self.temperature_range_min = temperature_range_min
         self.temperature_range_max = temperature_range_max
-
-    def __dict__(self):
-        return {
-            "temperature_range_min": self.temperature_range_min,
-            "temperature_range_max": self.temperature_range_max,
-        }
-
-    def __json__(self):
-        return self.__dict__()
 
     @staticmethod
     def fromDict(dict: dict):

@@ -133,7 +133,10 @@ def parse(text: str, textToSpeech: TextToSpeech = None) -> Assistance:
     )
     # if(textToSpeech):
     assistance.addAction(lambda: textToSpeech.speakScript(script), "🗣️ Speaking script")
-    assistance.addAction(lambda: print("\n".join(skillChecks)), "🖨️ Printing script")
+    if len(skillChecks) > 0:
+        assistance.addAction(
+            lambda: print("\n".join(skillChecks)), "🖨️ Printing skill checks"
+        )
 
     return assistance
 

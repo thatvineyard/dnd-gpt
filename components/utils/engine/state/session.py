@@ -50,7 +50,7 @@ class Session:
         file_path = os.path.join(session_directory, file_name)
 
         if not os.path.isfile(file_path):
-            raise Exception(
+            raise FileNotFoundError(
                 f"File ({file_name}) not found in session directory ({session_directory})"
             )
 
