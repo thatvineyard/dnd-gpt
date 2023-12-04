@@ -23,16 +23,19 @@ class ChatSession:
             temp_range_max=self.session.sessionSettings.temperature_range_max,
         )
 
-    def chat(self, message):
-        """Build a prompt, send to openAI and then save the history"""
-
+    def requireSession(self):
         if not self.session:
             raise EngineStateError("No session selected")
+
+        return self.session
+
+    def chat(self, message):
+        """Build a prompt, send to openAI and then save the history"""
 
         # Put together system prompt
         system_prompt = build_prompt(
             self.prompt_directory,
-            self.session.history,
+            self.requireSession().history,
         )
 
         cli_print_debug(
@@ -44,7 +47,7 @@ class ChatSession:
             system_prompt=system_prompt, prompt=message
         )
 
-        self.session.history.saveChatRound(message, response)
+        self.requireSession().history.saveChatRound(message, response)
         self.openai_client.randomizeTemperature()
 
         cli_print_debug(prefix=CliPrefix.CHAT, message=f"Response: \n{response}")
@@ -52,4 +55,4 @@ class ChatSession:
         return response
 
     def removeLastMessageFromHistory(self):
-        self.session.history.removeLastMessageFromHistory()
+        self.requireSession().history.removeLastMessageFromHistory()

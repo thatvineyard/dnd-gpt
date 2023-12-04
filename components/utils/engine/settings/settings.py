@@ -22,8 +22,8 @@ class SessionTempDefaults:
 class SessionSettings:
     def __init__(
         self,
-        temperature_range_min: int = SessionTempDefaults.creative,
-        temperature_range_max: int = SessionTempDefaults.kind_of_crazy,
+        temperature_range_min: float = SessionTempDefaults.creative,
+        temperature_range_max: float = SessionTempDefaults.kind_of_crazy,
     ):
         self.temperature_range_min = temperature_range_min
         self.temperature_range_max = temperature_range_max

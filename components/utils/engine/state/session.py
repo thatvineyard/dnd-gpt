@@ -9,8 +9,8 @@ class Session:
     def __init__(
         self,
         name: str,
-        sessionSettings: SessionSettings = None,
-        chat_history: ChatHistory = None,
+        sessionSettings: SessionSettings | None = None,
+        chat_history: ChatHistory | None = None,
     ):
         self.name = name
         self.sessionSettings = sessionSettings if sessionSettings else SessionSettings()

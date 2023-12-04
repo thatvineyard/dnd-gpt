@@ -1,5 +1,4 @@
 from typing import Callable
-from colorama import Fore, Style
 
 from components.utils.cli.cliprint import cli_print_info
 
@@ -13,7 +12,7 @@ class Assistance:
     """
 
     def __init__(self):
-        self.actions: list[tuple[Callable[[], None]], str] = []
+        self.actions: list[tuple[Callable[[], None], str]] = []
 
     def addAction(self, callback: Callable[[], None], description: str):
         """Add an action to the assistance. Note that they will run in the order you add them."""

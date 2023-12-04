@@ -62,7 +62,7 @@ def cli_print_error(message: str):
         print(_wrap_in_style(message, CliStyle.RED))
 
 
-def cli_input(prompt: str = None):
+def cli_input(prompt: str = ""):
     return input(_wrap_in_style(prompt, CliStyle.GREEN))
 
 

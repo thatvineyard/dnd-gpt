@@ -1,3 +1,4 @@
+from typing import Any
 import azure.cognitiveservices.speech as speechsdk
 from components.utils.cli.cliprint import CliPrefix, cli_print_debug, cli_print_error
 
@@ -44,7 +45,8 @@ class TextToSpeech:
 
         TextToSpeech.__checkResult(result)
 
-    def __checkResult(result):
+    @staticmethod
+    def __checkResult(result: Any):
         """Checks result of TTS generation and gives helpful error messages if something failed"""
 
         if result.reason == speechsdk.ResultReason.Canceled:
