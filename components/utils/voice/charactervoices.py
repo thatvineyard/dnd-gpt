@@ -43,19 +43,19 @@ def mapEmotionToStyle(emotion: str):
 
     match emotion:
         case "Sad":
-            return Styles.sad
+            return Styles.sad.value
         case "Angry":
-            return Styles.angry
+            return Styles.angry.value
         case "Happy":
-            return Styles.cheerful
+            return Styles.cheerful.value
         case "Terrified":
-            return Styles.terrified
+            return Styles.terrified.value
         case "Shouting":
-            return Styles.shouting
+            return Styles.shouting.value
         case "Whispering":
-            return Styles.whispering
+            return Styles.whispering.value
         case "Excited":
-            return Styles.excited
+            return Styles.excited.value
         case "Normal":
             return ""
         case _:

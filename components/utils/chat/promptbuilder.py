@@ -1,11 +1,9 @@
-from genericpath import isdir, isfile
 import os
 
 from components.utils.chat.chathistory import ChatHistory
-from components.utils.cli.cliprint import cli_print_debug
 
 
-def build_prompt(promt_folder: str, chat_history: ChatHistory = None):
+def build_prompt(promt_folder: str, chat_history: ChatHistory):
     if not os.path.isdir(promt_folder):
         raise Exception(f"Prompt folder {promt_folder} doesn't exist")
     # prompt_files = [f for f in os.listdir(promt_folder) if (os.path.isfile(promt_folder + os.path.sep + f))]
@@ -22,7 +20,6 @@ def build_prompt(promt_folder: str, chat_history: ChatHistory = None):
 
     for prompt_file in prompt_files:
         if os.path.isfile(prompt_file):
-            cli_print_debug(prompt_file)
             prompt_text = open(prompt_file, "r").read()
             prompt += prompt_text
             prompt += "\n-----\n"
@@ -37,5 +34,4 @@ def build_prompt(promt_folder: str, chat_history: ChatHistory = None):
 
     system_prompt = prompt + history_prompt + pre_question_prompt
 
-    cli_print_debug(system_prompt)
     return system_prompt

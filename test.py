@@ -5,7 +5,7 @@ from components.utils.cli.cliprint import cli_setup_logging
 from components.utils.cli.envvars import EnvVars
 import json_fix
 
-from components.utils.state.sessionhandler import SessionHandler
+from components.utils.engine.state.sessionhandler import SessionHandler
 
 cli_setup_logging(level=(logging.DEBUG if Args.debug else logging.INFO))
 
@@ -21,13 +21,3 @@ chatSession = ChatSession(
     sessionHandler.getCurrentSession(),
     EnvVars.OPENAI_KEY,
 )
-
-# cli_setup_logging(logging.DEBUG)
-
-# cli_print_debug(text)
-
-# try:
-#     assistance = parse(text, textToSpeech)
-#     assistance.execute()
-# except InputTextFormatError:
-#     exit

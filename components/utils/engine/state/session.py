@@ -1,18 +1,16 @@
-import json_fix
 import json
 import os
 from components.utils.chat.chathistory import ChatHistory
-from components.utils.cli.cliprint import cli_print_debug, cli_print_info
 
-from components.utils.settings.settings import EngineSettings, SessionSettings
+from components.utils.engine.settings.settings import SessionSettings
 
 
 class Session:
     def __init__(
         self,
         name: str,
-        sessionSettings: SessionSettings = None,
-        chat_history: ChatHistory = None,
+        sessionSettings: SessionSettings | None = None,
+        chat_history: ChatHistory | None = None,
     ):
         self.name = name
         self.sessionSettings = sessionSettings if sessionSettings else SessionSettings()
@@ -52,7 +50,7 @@ class Session:
         file_path = os.path.join(session_directory, file_name)
 
         if not os.path.isfile(file_path):
-            raise Exception(
+            raise FileNotFoundError(
                 f"File ({file_name}) not found in session directory ({session_directory})"
             )
 
@@ -61,18 +59,3 @@ class Session:
         file.close()
 
         return Session.fromJson(file_contents)
-
-    def __getSessionFilePath(self):
-        return os.path.join(self.sessionSettings.history_directory, self.name)
-
-    # def __getOrCreateChatHistory(
-    #     self
-    # ):
-    #     history_file_path = self.__getSessionFilePath()
-
-    #     history_file_name = f'{datetime.now().strftime("%d-%m-%Y_%H-%M-%S")}.json'
-
-    #     if os.path.exists(f"{history_directory}/{history_file_name}"):
-    #         return ChatHistory.fromFile(history_directory, history_file_name)
-    #     else:
-    #         return ChatHistory(history_directory, history_file_name)

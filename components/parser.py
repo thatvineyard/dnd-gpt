@@ -1,13 +1,11 @@
 import json
 from components.assistance import Assistance
 from components.utils.cli.cliprint import (
+    CliPrefix,
     cli_print_debug,
-    cli_print_error,
     cli_print_info,
 )
-from components.utils.voice.azurevoices import Voices
 from components.utils.voice.charactervoices import (
-    mapCharacterToVoice,
     mapEmotionToStyle,
     selectVoice,
     gm_voice,
@@ -19,7 +17,7 @@ from components.utils.voice.ttsscript import TtsScript
 # STEP 3
 
 
-def parse(text: str, textToSpeech: TextToSpeech = None) -> Assistance:
+def parse(text: str, textToSpeech: TextToSpeech) -> Assistance:
     """A function which takes in text and acts on it"""
 
     assistance = Assistance()
@@ -34,7 +32,9 @@ def parse(text: str, textToSpeech: TextToSpeech = None) -> Assistance:
             raise ValueError
         text = text[character_index:]
     except ValueError:
-        cli_print_debug("Could not find '[' or '{' in string")
+        cli_print_debug(
+            prefix=CliPrefix.PARSER, message="Could not find '[' or '{' in string"
+        )
         pass
 
     try:
@@ -45,13 +45,15 @@ def parse(text: str, textToSpeech: TextToSpeech = None) -> Assistance:
             raise ValueError
         text = text[: character_index + 1]
     except ValueError:
-        cli_print_debug("Could not find '[' or '{' in string")
+        cli_print_debug(
+            prefix=CliPrefix.PARSER, message="Could not find '[' or '{' in string"
+        )
         pass
 
     try:
         lines = json.loads(text)
     except json.JSONDecodeError as error:
-        cli_print_debug("Error decoding JSON")
+        cli_print_debug(prefix=CliPrefix.PARSER, message="Error decoding JSON")
         raise InputTextFormatError(error)
 
     script = TtsScript()
@@ -91,7 +93,7 @@ def parse(text: str, textToSpeech: TextToSpeech = None) -> Assistance:
                 if i % 2 == 0:
                     if part == "":
                         continue
-                    cli_print_debug(voice)
+                    cli_print_debug(prefix=CliPrefix.PARSER, message=voice)
                     script.addLine(
                         part,
                         voice=gm_voice,
@@ -114,7 +116,7 @@ def parse(text: str, textToSpeech: TextToSpeech = None) -> Assistance:
 
         try:
             skillCheckDc = int(line.get("skillCheck", -1))
-        except:
+        except Exception:
             skillCheckDc = -1
 
         skillCheckPrompt = line.get("skillCheckPrompt", "")
@@ -128,7 +130,10 @@ def parse(text: str, textToSpeech: TextToSpeech = None) -> Assistance:
     )
     # if(textToSpeech):
     assistance.addAction(lambda: textToSpeech.speakScript(script), "🗣️ Speaking script")
-    assistance.addAction(lambda: print("\n".join(skillChecks)), "🖨️ Printing script")
+    if len(skillChecks) > 0:
+        assistance.addAction(
+            lambda: print("\n".join(skillChecks)), "🖨️ Printing skill checks"
+        )
 
     return assistance
 

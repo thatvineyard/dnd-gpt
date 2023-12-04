@@ -1,5 +1,6 @@
+from typing import Any
 import azure.cognitiveservices.speech as speechsdk
-from components.utils.cli.cliprint import cli_print_debug, cli_print_error
+from components.utils.cli.cliprint import CliPrefix, cli_print_debug, cli_print_error
 
 from components.utils.voice.ttsscript import TtsScript
 
@@ -38,16 +39,16 @@ class TextToSpeech:
         """Collection of advanced tts using SSML syntax."""
 
         ssmlText = script.toSSML()
-        cli_print_debug(ssmlText)
+        cli_print_debug(prefix=CliPrefix.VOICE, message=f"SSML text: \n{ssmlText}")
 
         result = self.speech_synthesizer.speak_ssml_async(ssmlText).get()
 
         TextToSpeech.__checkResult(result)
 
-    def __checkResult(result):
+    @staticmethod
+    def __checkResult(result: Any):
         """Checks result of TTS generation and gives helpful error messages if something failed"""
 
-        cli_print_debug(result)
         if result.reason == speechsdk.ResultReason.Canceled:
             cancellation_details = result.cancellation_details
             cli_print_error(
@@ -58,4 +59,3 @@ class TextToSpeech:
                     cli_print_error(
                         "Error details: {}".format(cancellation_details.error_details)
                     )
-            cli_print_error("Did you update the subscription info?")

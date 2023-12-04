@@ -25,7 +25,7 @@ class SsmlFormatter:
     def encaseInVoiceTag(text: str, voice: str):
         """Surround text with voice tags"""
 
-        prefix = f'<voice name="{voice}">'
+        prefix = f"<voice name='{voice}'>"
         postfix = "</voice>"
         return prefix + text + postfix
 
@@ -40,7 +40,7 @@ class SsmlFormatter:
             cli_print_debug("Style degree too high, clamping to 2")
             styleDegree = 2
 
-        prefix = f'<mstts:express-as style="{style}" styledegree="{styleDegree}">'
+        prefix = f"<mstts:express-as style='{style}' styledegree='{styleDegree}'>"
         postfix = "</mstts:express-as>"
 
         return prefix + text + postfix
@@ -56,7 +56,7 @@ class SsmlFormatter:
             cli_print_debug("Rate too high, clamping to 2")
             rate = 2
 
-        prefix = f'<prosody rate="{rate}">'
+        prefix = f"<prosody rate='{rate}'>"
         postfix = "</prosody>"
 
         return prefix + text + postfix

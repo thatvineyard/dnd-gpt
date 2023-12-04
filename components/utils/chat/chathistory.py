@@ -1,5 +1,3 @@
-import json
-import os
 import re
 
 # STEP 1
@@ -55,7 +53,6 @@ class ChatHistory:
 
     def removeLastMessageFromHistory(self):
         self.history.pop()
-        self.storeHistory()
 
     def toHistoryPrompt(self):
         """Format in natural-language-way that OpenAI will understand."""
