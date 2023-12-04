@@ -1,3 +1,5 @@
+import math
+import random
 from components.utils.chat.openai import OpenAiClient
 from components.utils.cli.cliprint import CliPrefix, cli_print_debug
 from components.utils.engine.enginestateerror import EngineStateError
@@ -13,6 +15,7 @@ class ChatSession:
         self.api_key = api_key
         self.prompt_directory = prompt_directory
         self.session = None
+        self.randomizeTemperature()
 
     def new_session(self, session: Session):
         self.session = session
@@ -28,7 +31,7 @@ class ChatSession:
 
         return self.session
 
-    def chat(self, prompt="", system_prompt: str = ""):
+    def chat(self, prompt="", system_prompt: str = "", temperature: int | None = None):
         """Build a prompt, send to openAI and then save the history"""
 
         cli_print_debug(
@@ -37,11 +40,12 @@ class ChatSession:
         cli_print_debug(prefix=CliPrefix.CHAT, message=f"Prompt '{prompt}'")
 
         response = self.openai_client.generateChatCompletion(
-            system_prompt=system_prompt, prompt=prompt
+            system_prompt=system_prompt,
+            prompt=prompt,
+            temperature_procent=self.temperature_procent,
         )
 
         self.requireSession().history.saveChatRound(prompt, response)
-        self.openai_client.randomizeTemperature()
 
         cli_print_debug(prefix=CliPrefix.CHAT, message=f"Response: \n{response}")
 
@@ -49,3 +53,9 @@ class ChatSession:
 
     def removeLastMessageFromHistory(self):
         self.requireSession().history.removeLastMessageFromHistory()
+
+    def randomizeTemperature(self):
+        self.setTemperatureProcent(math.ceil(random.random() * 100))
+
+    def setTemperatureProcent(self, temperature: int):
+        self.temperature_procent = min(100, max(1, temperature))

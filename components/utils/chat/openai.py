@@ -1,4 +1,3 @@
-import random
 from openai import OpenAI
 
 
@@ -15,12 +14,13 @@ class OpenAiClient:
         self, api_key: str, temp_range_min: float = 0.8, temp_range_max: float = 1
     ):
         self.temp_range_min = max(0, temp_range_min)
-        self.temp_range_max = min(1.5, temp_range_max)
+        self.temp_range_max = min(1.3, temp_range_max)
 
         self.client = OpenAI(api_key=api_key)
-        self.temp = self.randomizeTemperature()
 
-    def generateChatCompletion(self, system_prompt: str, prompt: str):
+    def generateChatCompletion(
+        self, system_prompt: str, prompt: str, temperature_procent: int
+    ):
         """Generate a chat completion from a system prompt and prompt"""
 
         response = self.client.chat.completions.create(
@@ -29,7 +29,7 @@ class OpenAiClient:
                 {"role": "system", "content": system_prompt},
                 {"role": "user", "content": prompt},
             ],
-            temperature=self.temp,
+            temperature=self.getTemperature(temperature_procent),
         )
 
         if len(response.choices) < 1:
@@ -42,8 +42,8 @@ class OpenAiClient:
 
         return content.strip()
 
-    def randomizeTemperature(self):
+    def getTemperature(self, temperature_procent: int):
         return (
-            random.random() * (self.temp_range_max - self.temp_range_min)
-            + self.temp_range_min
+            self.temp_range_min
+            + (temperature_procent * (self.temp_range_max - self.temp_range_min)) / 100
         )

@@ -25,8 +25,10 @@ class GameMaster:
             .withAllPromptFiles()
             .withHistory()
             .withHistoryLimit(2000)
+            .withLimitResponse(words=10, paragraphs=1)
             .build()
         )
+        self.chatSession.setTemperatureProcent(100)
         story_response: str = self.chatSession.chat(
             prompt=player_input, system_prompt=story_system_prompt
         )
@@ -37,6 +39,7 @@ class GameMaster:
             .withFinalInstruction("Reformat this answer in proper JSON format.")
             .build()
         )
+        self.chatSession.setTemperatureProcent(0)
         formatted_response: str = self.chatSession.chat(
             prompt=story_response, system_prompt=format_system_prompt
         )

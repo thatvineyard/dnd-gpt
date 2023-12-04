@@ -15,6 +15,8 @@ class PromptFactory:
         self.history = False
         self.history_limit: int | None = None
 
+        self.limit_response_instruction: str | None = None
+
         self.final_instruction: str | None = None
 
         self.__section_seperator = "\n----\n"
@@ -74,6 +76,31 @@ class PromptFactory:
 
     def withFinalInstruction(self, instruction: str):
         self.final_instruction = instruction
+        return self
+
+    def withLimitResponse(
+        self,
+        characters: int | None = None,
+        words: int | None = None,
+        sentences: int | None = None,
+        paragraphs: int | None = None,
+    ):
+        instruction = ""
+
+        if characters and characters > 0:
+            instruction += f"Limit your answer to {characters} characters. "
+
+        if words and words > 0:
+            instruction += f"Limit your answer to {words} words. "
+
+        if sentences and sentences > 0:
+            instruction += f"Limit your answer to {sentences} words. "
+
+        if paragraphs and paragraphs > 0:
+            instruction += f"Limit your answer to {paragraphs} words. "
+
+        self.limit_response_instruction = instruction
+
         return self
 
 
