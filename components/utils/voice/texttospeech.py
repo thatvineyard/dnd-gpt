@@ -57,4 +57,3 @@ class TextToSpeech:
                     cli_print_error(
                         "Error details: {}".format(cancellation_details.error_details)
                     )
-            cli_print_error("Did you update the subscription info?")
