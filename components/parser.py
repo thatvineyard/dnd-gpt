@@ -3,12 +3,9 @@ from components.assistance import Assistance
 from components.utils.cli.cliprint import (
     CliPrefix,
     cli_print_debug,
-    cli_print_error,
     cli_print_info,
 )
-from components.utils.voice.azurevoices import Voices
 from components.utils.voice.charactervoices import (
-    mapCharacterToVoice,
     mapEmotionToStyle,
     selectVoice,
     gm_voice,
@@ -20,7 +17,7 @@ from components.utils.voice.ttsscript import TtsScript
 # STEP 3
 
 
-def parse(text: str, textToSpeech: TextToSpeech = None) -> Assistance:
+def parse(text: str, textToSpeech: TextToSpeech) -> Assistance:
     """A function which takes in text and acts on it"""
 
     assistance = Assistance()
@@ -119,7 +116,7 @@ def parse(text: str, textToSpeech: TextToSpeech = None) -> Assistance:
 
         try:
             skillCheckDc = int(line.get("skillCheck", -1))
-        except:
+        except Exception:
             skillCheckDc = -1
 
         skillCheckPrompt = line.get("skillCheckPrompt", "")

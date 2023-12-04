@@ -1,10 +1,9 @@
-import math
 import random
 from openai import OpenAI
 
-from components.utils.cli.cliprint import cli_print_debug
 
-# STEP 1
+class OpenAiException(Exception):
+    pass
 
 
 class OpenAiClient:
@@ -12,7 +11,9 @@ class OpenAiClient:
 
     model = "gpt-3.5-turbo-1106"
 
-    def __init__(self, api_key: str, temp_range_min: int = 0.8, temp_range_max=1):
+    def __init__(
+        self, api_key: str, temp_range_min: float = 0.8, temp_range_max: float = 1
+    ):
         self.temp_range_min = max(0, temp_range_min)
         self.temp_range_max = min(1.5, temp_range_max)
 
@@ -31,7 +32,15 @@ class OpenAiClient:
             temperature=self.temp,
         )
 
-        return response.choices[0].message.content.strip()
+        if len(response.choices) < 1:
+            raise OpenAiException("No response from OpenAI")
+
+        content = response.choices[0].message.content
+
+        if not content or content == "":
+            raise OpenAiException("OpenAI response had no content")
+
+        return content.strip()
 
     def randomizeTemperature(self):
         return (
