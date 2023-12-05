@@ -1,4 +1,5 @@
 import os
+from components.utils.chat.promptfiles import PromptFiles
 
 from components.utils.engine.state.session import Session
 
@@ -6,12 +7,16 @@ format_prompt_directory = "format"
 
 
 class PromptFactory:
-    def __init__(self, prompts_directory: str, session: Session):
-        self.prompts_directory = prompts_directory
+    def __init__(self, session: Session):
         self.session = session
 
-        self.format_prompt_files = []
+        self.game_master_instruction_files: list[str] = []
 
+        self.root_prompt_files: list[str] = []
+
+        self.format_prompt_files: list[str] = []
+
+        self.synopsis = False
         self.history = False
         self.history_limit: int | None = None
 
@@ -24,18 +29,48 @@ class PromptFactory:
     def build(self):
         prompt = ""
 
-        # format prompt files
-        for prompt_file in self.format_prompt_files:
-            format_prompt = ""
-            if os.path.isfile(prompt_file):
-                format_prompt += open(prompt_file, "r").read()
+        if self.root_prompt_files and len(self.root_prompt_files) > 0:
+            for prompt_file in self.root_prompt_files:
+                root_prompt = ""
+                if os.path.isfile(prompt_file):
+                    root_prompt += open(prompt_file, "r").read()
 
-            prompt += format_prompt
+                prompt += root_prompt
+            prompt += self.__section_seperator
+
+        if (
+            self.game_master_instruction_files
+            and len(self.game_master_instruction_files) > 0
+        ):
+            for prompt_file in self.game_master_instruction_files:
+                gm_prompt = ""
+                if os.path.isfile(prompt_file):
+                    gm_prompt += open(prompt_file, "r").read()
+
+                prompt += gm_prompt
+            prompt += self.__section_seperator
+
+        if self.format_prompt_files and len(self.format_prompt_files) > 0:
+            for prompt_file in self.format_prompt_files:
+                format_prompt = ""
+                if os.path.isfile(prompt_file):
+                    format_prompt += open(prompt_file, "r").read()
+
+                prompt += format_prompt
+            prompt += self.__section_seperator
+
+        if self.synopsis and self.session.story.synopsis:
+            synopsis_prompt = self.session.story.synopsis
+            prompt += synopsis_prompt
             prompt += self.__section_seperator
 
         if self.history and self.session.history:
             history_prompt = self.session.history.toHistoryPrompt(self.history_limit)
             prompt += history_prompt
+            prompt += self.__section_seperator
+
+        if self.limit_response_instruction:
+            prompt += self.limit_response_instruction
             prompt += self.__section_seperator
 
         if self.final_instruction:
@@ -51,27 +86,34 @@ class PromptFactory:
         self.history_limit = limit
         return self
 
-    def withAllPromptFiles(self):
-        self.format_prompt_files = [
-            file_path
-            for file_path in map(
-                lambda filename: self.prompts_directory + os.path.sep + filename,
-                os.listdir(self.prompts_directory),
-            )
-            if (os.path.isfile(file_path) and os.path.splitext(file_path)[1] == ".txt")
-        ]
+    def withRootPromptFiles(self):
+        self.format_prompt_files = PromptFiles.ROOT_PROMPTS
         return self
 
-    def withFormatPrompts(self):
-        directory = os.path.join(self.prompts_directory, format_prompt_directory)
-        self.format_prompt_files = [
-            file_path
-            for file_path in map(
-                lambda filename: os.path.join(directory, filename),
-                os.listdir(directory),
-            )
-            if (os.path.isfile(file_path) and os.path.splitext(file_path)[1] == ".txt")
-        ]
+    def withSynopsis(self):
+        self.synopsis = True
+        return self
+
+    def withGameMasterInstruction(self):
+        self.game_master_instruction_files.append(PromptFiles.GAME_MASTER_PROMPT)
+        return self
+
+    def withSkillCheckInstruction(self):
+        self.game_master_instruction_files.append(PromptFiles.SKILL_CHECK_PROMPT)
+        return self
+
+    def withCreateStoryLineInstruction(self):
+        self.game_master_instruction_files.append(PromptFiles.CREATE_STORYLINE_PROMPT)
+        return self
+
+    def withIdentifyCharactersInstruction(self):
+        self.game_master_instruction_files.append(
+            PromptFiles.IDENTIFY_CHARACTERS_PROMPT
+        )
+        return self
+
+    def withFormatInstructions(self):
+        self.format_prompt_files = PromptFiles.FORMAT_PROMPTS
         return self
 
     def withFinalInstruction(self, instruction: str):
@@ -94,10 +136,10 @@ class PromptFactory:
             instruction += f"Limit your answer to {words} words. "
 
         if sentences and sentences > 0:
-            instruction += f"Limit your answer to {sentences} words. "
+            instruction += f"Limit your answer to {sentences} sentences. "
 
         if paragraphs and paragraphs > 0:
-            instruction += f"Limit your answer to {paragraphs} words. "
+            instruction += f"Limit your answer to {paragraphs} paragraphs. "
 
         self.limit_response_instruction = instruction
 

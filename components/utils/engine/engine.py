@@ -51,6 +51,5 @@ class Engine:
 
     def __create_prompt_factory(self):
         return PromptFactory(
-            self.engineSettings.prompt_directory,
             self.sessionHandler.requireSelectedSession(),
         )

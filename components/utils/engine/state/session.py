@@ -1,6 +1,7 @@
 import json
 import os
 from components.utils.chat.chathistory import ChatHistory
+from components.utils.engine.adventure.story import Story
 
 from components.utils.engine.settings.settings import SessionSettings
 
@@ -11,10 +12,12 @@ class Session:
         name: str,
         sessionSettings: SessionSettings | None = None,
         chat_history: ChatHistory | None = None,
+        story: Story | None = None,
     ):
         self.name = name
         self.sessionSettings = sessionSettings if sessionSettings else SessionSettings()
         self.history = chat_history if chat_history else ChatHistory()
+        self.story = story if story else Story()
 
     def toJson(self):
         return json.dumps(
@@ -22,6 +25,7 @@ class Session:
                 "name": self.name,
                 "history": self.history,
                 "sessionSettings": self.sessionSettings,
+                "story": self.story,
             },
             default=lambda o: o.__dict__,
             sort_keys=True,
@@ -43,6 +47,7 @@ class Session:
             json_object.get("name"),
             SessionSettings.fromDict(json_object.get("sessionSettings")),
             ChatHistory.fromDict(json_object.get("history")),
+            Story.fromDict(json_object.get("story")),
         )
 
     @staticmethod

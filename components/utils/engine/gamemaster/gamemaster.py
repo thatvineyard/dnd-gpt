@@ -1,8 +1,16 @@
+import json
 from typing import Callable
+from components.assistance import Assistance
 from components.chat import ChatSession
 from components.parser import InputTextFormatError, parse
 from components.utils.chat.promptfactory import PromptFactory
-from components.utils.cli.cliprint import cli_input, cli_print_error, cli_print_warn
+from components.utils.cli.cliprint import (
+    cli_input,
+    cli_print_error,
+    cli_print_info,
+    cli_print_warn,
+)
+from components.utils.engine.adventure.story import Story
 from components.utils.voice.texttospeech import TextToSpeech
 
 
@@ -12,17 +20,51 @@ class GameMaster:
         chatSession: ChatSession,
         textToSpeech: TextToSpeech,
         create_prompt_factory: Callable[[], PromptFactory],
+        story: Story,
     ):
         self.chatSession = chatSession
         self.textToSpeech = textToSpeech
         self.create_prompt_factory = create_prompt_factory
+        self.story = story
+
+    def createSynposis(self):
+        storyline_system_prompt = (
+            self.create_prompt_factory()
+            .withRootPromptFiles()
+            .withGameMasterInstruction()
+            .withCreateStoryLineInstruction()
+            .withLimitResponse(sentences=20, paragraphs=4)
+            .build()
+        )
+        self.chatSession.setTemperatureProcent(100)
+        story_response: str = self.chatSession.chat(
+            prompt="Create a story line", system_prompt=storyline_system_prompt
+        )
+
+        self.story.synopsis = story_response
+
+    def identifyCharacters(self):
+        storyline_system_prompt = (
+            self.create_prompt_factory()
+            .withSynopsis()
+            .withGameMasterInstruction()
+            .withIdentifyCharactersInstruction()
+            .withLimitResponse(sentences=20, paragraphs=4)
+            .build()
+        )
+        self.chatSession.setTemperatureProcent(100)
+        characters_response: str = self.chatSession.chat(
+            prompt="Identify 5 characters", system_prompt=storyline_system_prompt
+        )
+
+        self.story.characters = characters_response
 
     def takeTurn(self):
         player_input: str = cli_input("INPUT: ")
 
         story_system_prompt = (
             self.create_prompt_factory()
-            .withAllPromptFiles()
+            .withRootPromptFiles()
             .withHistory()
             .withHistoryLimit(2000)
             .withLimitResponse(words=10, paragraphs=1)
@@ -35,7 +77,7 @@ class GameMaster:
 
         format_system_prompt = (
             self.create_prompt_factory()
-            .withFormatPrompts()
+            .withFormatInstructions()
             .withFinalInstruction("Reformat this answer in proper JSON format.")
             .build()
         )
@@ -64,7 +106,7 @@ class GameMaster:
                 )
                 format_system_prompt = (
                     self.create_prompt_factory()
-                    .withFormatPrompts()
+                    .withFormatInstructions()
                     .withFinalInstruction("Reformat this answer in proper JSON format.")
                     .build()
                 )

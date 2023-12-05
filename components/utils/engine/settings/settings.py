@@ -1,4 +1,3 @@
-from enum import Enum
 from components.utils.cli.args import Args
 from components.utils.cli.envvars import EnvVars
 
@@ -14,8 +13,8 @@ class EngineSettings:
 
 
 class SessionTempDefaults:
-    kind_of_crazy = 1.3
-    creative = 1
+    kind_of_crazy = 1.1
+    creative = 0.8
     boring = 0.3
 
 

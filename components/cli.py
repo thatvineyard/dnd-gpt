@@ -19,7 +19,20 @@ def start_cli(
 
     chatSession.new_session(sessionHandler.requireSelectedSession())
 
-    gameMaster = GameMaster(chatSession, textToSpeech, create_prompt_factory)
+    gameMaster = GameMaster(
+        chatSession,
+        textToSpeech,
+        create_prompt_factory,
+        sessionHandler.requireSelectedSession().story,
+    )
+
+    if not sessionHandler.requireSelectedSession().story.synopsis:
+        gameMaster.createSynposis()
+        sessionHandler.saveSession()
+
+    if not sessionHandler.requireSelectedSession().story.characters or True:
+        gameMaster.identifyCharacters()
+        sessionHandler.saveSession()
 
     while True:
         gameMaster.takeTurn()
