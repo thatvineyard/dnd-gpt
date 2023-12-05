@@ -11,9 +11,8 @@ from components.utils.engine.state.session import Session
 class ChatSession:
     """A class used to chat with openAI and to keep track of the history."""
 
-    def __init__(self, api_key: str, prompt_directory: str):
+    def __init__(self, api_key: str):
         self.api_key = api_key
-        self.prompt_directory = prompt_directory
         self.session = None
         self.randomizeTemperature()
 

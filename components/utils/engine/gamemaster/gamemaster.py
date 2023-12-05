@@ -77,7 +77,7 @@ class GameMaster:
 
         format_system_prompt = (
             self.create_prompt_factory()
-            .withFormatInstructions()
+            .withConversationFormatInstructions()
             .withFinalInstruction("Reformat this answer in proper JSON format.")
             .build()
         )
@@ -106,7 +106,7 @@ class GameMaster:
                 )
                 format_system_prompt = (
                     self.create_prompt_factory()
-                    .withFormatInstructions()
+                    .withConversationFormatInstructions()
                     .withFinalInstruction("Reformat this answer in proper JSON format.")
                     .build()
                 )

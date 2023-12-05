@@ -112,10 +112,10 @@ class PromptFactory:
         )
         return self
 
-    def withFormatInstructions(self):
-        self.format_prompt_files = PromptFiles.FORMAT_PROMPTS
+    def withConversationFormatInstructions(self):
+        self.format_prompt_files += PromptFiles.FORMAT_CONVERSATION
         return self
-
+      
     def withFinalInstruction(self, instruction: str):
         self.final_instruction = instruction
         return self

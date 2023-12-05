@@ -20,7 +20,6 @@ class Engine:
 
         self.chatSession = ChatSession(
             self.engineSettings.openai_key,
-            self.engineSettings.prompt_directory,
         )
         # spotipy = SpotipyClient(client_id=SPOTIFY_CLIENT_ID, client_secret=SPOTIFY_CLIENT_SECRET)
 

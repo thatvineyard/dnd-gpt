@@ -28,6 +28,10 @@ class PromptFiles:
         if (os.path.isfile(file_path) and os.path.splitext(file_path)[1] == ".txt")
     ]
 
+    FORMAT_CONVERSATION = os.path.join(
+        FORMAT_DIR, GAME_MASTER_DIR, "conversation-format-prompt.txt"
+    )
+
     FORMAT_PROMPTS = [
         file_path
         for file_path in map(
