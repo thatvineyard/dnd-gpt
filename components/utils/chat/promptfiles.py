@@ -5,6 +5,7 @@ from components.utils.cli.envvars import EnvVars
 PROMPTS_DIR = EnvVars.PROMPTS_DIRECTORY
 FORMAT_DIR = "format"
 GAME_MASTER_DIR = "gamemaster"
+WORLDS_DIR = "worlds"
 
 
 class PromptFiles:
@@ -28,15 +29,15 @@ class PromptFiles:
         if (os.path.isfile(file_path) and os.path.splitext(file_path)[1] == ".txt")
     ]
 
+    WORLD_PROMPTS = {
+        "feskejord": os.path.join(PROMPTS_DIR, WORLDS_DIR, "feskefjord-prompt.txt"),
+        "uppsala2403": os.path.join(PROMPTS_DIR, WORLDS_DIR, "uppsala2403-prompt.txt"),
+    }
+
     FORMAT_CONVERSATION = os.path.join(
-        FORMAT_DIR, GAME_MASTER_DIR, "conversation-format-prompt.txt"
+        PROMPTS_DIR, FORMAT_DIR, "conversation-format-prompt.txt"
     )
 
-    FORMAT_PROMPTS = [
-        file_path
-        for file_path in map(
-            lambda filename: os.path.join(PROMPTS_DIR, FORMAT_DIR, filename),
-            os.listdir(os.path.join(PROMPTS_DIR, FORMAT_DIR)),
-        )
-        if (os.path.isfile(file_path) and os.path.splitext(file_path)[1] == ".txt")
-    ]
+    FORMAT_CHARACTERS = os.path.join(
+        PROMPTS_DIR, FORMAT_DIR, "character-format-prompt.txt"
+    )

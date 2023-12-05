@@ -15,11 +15,11 @@ class CliStyle(Enum):
 
 
 class CliPrefix:
-    ENGINE = "🚀  ENGINE: "
-    CHAT = "🤖    CHAT: "
-    PARSER = "🔍  PARSER: "
-    SESSION = "📜 SESSION: "
-    VOICE = "🗣️   VOICE: "
+    ENGINE = "🚀 [ENGINE ]: "
+    CHAT = "🤖 [CHAT   ]: "
+    PARSER = "🔍 [PARSER ]: "
+    SESSION = "📜 [SESSION]: "
+    VOICE = "🗣️ [VOICE  ]: "
 
 
 _level = logging.INFO

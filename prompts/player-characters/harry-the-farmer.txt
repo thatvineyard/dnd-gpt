@@ -2,9 +2,9 @@ The characters that will be played by the players in this game are the following
 
 Harry:
 A meak but brave farmer whose strength is in his constitution and resiliance. He can power through mostly almost any bad situation.
-Harry has the following skills: 
+Harry has the following skills:
 - Deescalate: Harry's meager frame makes others perceive him as unthreatening and will not bother with certain precautions
-- Ox's strength: From years of carrying heavy farming equipment and produce, Harry can summon great strength when in a sticky situation. 
+- Ox's strength: From years of carrying heavy farming equipment and produce, Harry can summon great strength when in a sticky situation.
 Harry has the following inventory:
-- Paring knife: A small, easily hidden knife usually used to peel vegetable. 
+- Paring knife: A small, easily hidden knife usually used to peel vegetable.
 - Rope: A 5m rope

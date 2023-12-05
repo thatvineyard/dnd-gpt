@@ -30,7 +30,7 @@ class GameMaster:
     def createSynposis(self):
         storyline_system_prompt = (
             self.create_prompt_factory()
-            .withRootPromptFiles()
+            .withWorldPromptFile("uppsala2403")
             .withGameMasterInstruction()
             .withCreateStoryLineInstruction()
             .withLimitResponse(sentences=20, paragraphs=4)
@@ -57,14 +57,25 @@ class GameMaster:
             prompt="Identify 5 characters", system_prompt=storyline_system_prompt
         )
 
-        self.story.characters = characters_response
+        format_system_prompt = (
+            self.create_prompt_factory()
+            .withCharacterFormatInstructions()
+            .withFinalInstruction("Reformat this answer in proper JSON format.")
+            .build()
+        )
+        self.chatSession.setTemperatureProcent(0)
+        formatted_response: str = self.chatSession.chat(
+            prompt=characters_response, system_prompt=format_system_prompt
+        )
+
+        self.story.characters = formatted_response
 
     def takeTurn(self):
         player_input: str = cli_input("INPUT: ")
 
         story_system_prompt = (
             self.create_prompt_factory()
-            .withRootPromptFiles()
+            .withWorldPromptFile("uppsala2403")
             .withHistory()
             .withHistoryLimit(2000)
             .withLimitResponse(words=10, paragraphs=1)

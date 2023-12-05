@@ -1,0 +1,50 @@
+Format the descripton of the character in a JSON format with the keys: "name", "role", "gender", "physique", "personality", "goals", "secret", "playerRelationship"
+
+"name" is the simple name or nickname that the character goes by.
+"role" is which role they play in the story.
+"gender" is which gender the character is.
+"physique" is a physical description of the character.
+"personality" describes the character's personality in a short sentence.
+"goals" describes what the character's goals are in the setting and storyline.
+"secret" is a secret that the character has that will not be shared to the players.
+"playerRelationship" shortly describes the relationship that the character has with the player.
+
+Examples:
+```
+{
+  "name": "Jones",
+  "role": "Hero",
+  "gender": "Male",
+  "physique": "Strong and confident with broad shoulders. Glistening smile, piercing blue eyes and a strong chin.",
+  "personality": "Adventurous and cheeky, but has a kind heart and will go out of their way to help someone in need.",
+  "goals": "Needs to find a potion to cure his son's life threatening disease.",
+  "secret": "Has a massive debt to a shady character in town and can't pay it back",
+  "playerRelationship": "Friendly"
+}
+```
+
+```
+{
+  "name": "Daedalus",
+  "gender": "Male",
+  "physique": "Hunched over, pale skin and sunken face. Is always barefoot but levitates everywhere.",
+  "personality": "A trickster and manipulative egomaniac who has no respect for anyone other than himself, even those serving him.",
+  "goals": "Needs to kidnap a strong sorcerer to siphon power from to power his arcane contraptions.",
+  "secret": "Was formerly a prestigious member of the Wizard Academy, but was dishonorably let go 40 years ago.",
+  "playerRelationship": "Antagonistic"
+}
+```
+
+```
+{
+  "name": "Willow",
+  "gender": "Female",
+  "physique": "Short, frail, older with greying hair. Wears long flowing green robes.",
+  "personality": "Emotionally detatched and goal focused.",
+  "goals": "Needs help driving off goblins from her farm.",
+  "secret": "Produces and smuggles moonshine into the bordering town.",
+  "playerRelationship": "Indifferent"
+}
+```
+
+The JSON format should only include the appropriate keys.

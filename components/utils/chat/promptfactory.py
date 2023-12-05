@@ -1,4 +1,5 @@
 import os
+from uu import Error
 from components.utils.chat.promptfiles import PromptFiles
 
 from components.utils.engine.state.session import Session
@@ -15,6 +16,8 @@ class PromptFactory:
         self.root_prompt_files: list[str] = []
 
         self.format_prompt_files: list[str] = []
+
+        self.world_prompt_file: str | None = None
 
         self.synopsis = False
         self.history = False
@@ -59,6 +62,13 @@ class PromptFactory:
                 prompt += format_prompt
             prompt += self.__section_seperator
 
+        if self.world_prompt_file:
+            world_prompt = ""
+            if os.path.isfile(self.world_prompt_file):
+                world_prompt = open(self.world_prompt_file, "r").read()
+            prompt += world_prompt
+            prompt += self.__section_seperator
+
         if self.synopsis and self.session.story.synopsis:
             synopsis_prompt = self.session.story.synopsis
             prompt += synopsis_prompt
@@ -87,7 +97,16 @@ class PromptFactory:
         return self
 
     def withRootPromptFiles(self):
-        self.format_prompt_files = PromptFiles.ROOT_PROMPTS
+        self.root_prompt_files = PromptFiles.ROOT_PROMPTS
+        return self
+
+    def withWorldPromptFile(self, world_name: str):
+        if self.world_prompt_file:
+            raise Exception("World prompt already set")
+        world_prompt_file = PromptFiles.WORLD_PROMPTS[world_name]
+        if not world_prompt_file:
+            raise Exception(f"Could not find world prompt {world_name}")
+        self.world_prompt_file = world_prompt_file
         return self
 
     def withSynopsis(self):
@@ -113,9 +132,13 @@ class PromptFactory:
         return self
 
     def withConversationFormatInstructions(self):
-        self.format_prompt_files += PromptFiles.FORMAT_CONVERSATION
+        self.format_prompt_files.append(PromptFiles.FORMAT_CONVERSATION)
         return self
-      
+
+    def withCharacterFormatInstructions(self):
+        self.format_prompt_files.append(PromptFiles.FORMAT_CHARACTERS)
+        return self
+
     def withFinalInstruction(self, instruction: str):
         self.final_instruction = instruction
         return self
